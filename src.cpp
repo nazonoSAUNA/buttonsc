@@ -13,7 +13,7 @@ inline HWND GetTopOwner(HWND hwnd) {
 FILTER_DLL filter = {
 	FILTER_FLAG_ALWAYS_ACTIVE | FILTER_FLAG_DISP_FILTER,
 	0,0,
-	const_cast<char*>("�{�^���V���[�g�J�b�g�ǉ�"),
+	const_cast<char*>("ボタンショートカット追加"),
 	NULL,NULL,NULL,
 	NULL,NULL,
 	NULL,NULL,NULL,
@@ -36,21 +36,21 @@ EXTERN_C FILTER_DLL __declspec(dllexport)* __stdcall GetFilterTable(void)
 #define COMMAND_FILE_BUTTON3 (WM_APP + 3)
 #define COMMAND_FILE_BUTTON4 (WM_APP + 4)
 BOOL func_init(FILTER* fp) {
-	fp->exfunc->add_menu_item(fp, const_cast<char*>("�Q�ƃt�@�C��1��"), fp->hwnd, COMMAND_FILE_BUTTON1, NULL, NULL);
-	fp->exfunc->add_menu_item(fp, const_cast<char*>("�Q�ƃt�@�C��2��"), fp->hwnd, COMMAND_FILE_BUTTON2, NULL, NULL);
-	fp->exfunc->add_menu_item(fp, const_cast<char*>("�Q�ƃt�@�C��3��"), fp->hwnd, COMMAND_FILE_BUTTON3, NULL, NULL);
-	fp->exfunc->add_menu_item(fp, const_cast<char*>("�Q�ƃt�@�C��4��"), fp->hwnd, COMMAND_FILE_BUTTON4, NULL, NULL);
+	fp->exfunc->add_menu_item(fp, const_cast<char*>("参照ファイル1個目"), fp->hwnd, COMMAND_FILE_BUTTON1, NULL, NULL);
+	fp->exfunc->add_menu_item(fp, const_cast<char*>("参照ファイル2個目"), fp->hwnd, COMMAND_FILE_BUTTON2, NULL, NULL);
+	fp->exfunc->add_menu_item(fp, const_cast<char*>("参照ファイル3個目"), fp->hwnd, COMMAND_FILE_BUTTON3, NULL, NULL);
+	fp->exfunc->add_menu_item(fp, const_cast<char*>("参照ファイル4個目"), fp->hwnd, COMMAND_FILE_BUTTON4, NULL, NULL);
 
 	return TRUE;
 }
 
-void click_file_button(HWND fphwnd,char* str,int n) {
+void click_dialog_button(HWND fphwnd,char* str,int n) {
 	HWND aviutl_hwnd = GetTopOwner(fphwnd);
 	HWND eedialog_hwnd = FindWindowA("ExtendedFilterClass", NULL);
 	if (!IsWindowVisible(eedialog_hwnd)) {
 		return;
 	}
-	if (aviutl_hwnd != GetTopOwner(eedialog_hwnd)) { // AviUtl���d�N���̏ꍇ�A�ŏ��ɏE�����̂��ʂ�������ʓ|�Ȃ̂Œ�~����
+	if (aviutl_hwnd != GetTopOwner(eedialog_hwnd)) { // AviUtl多重起動の場合、最初に拾ったのが別だったら面倒なので停止する
 		return;
 	}
 	HWND pre_button = NULL;
@@ -79,7 +79,7 @@ BOOL func_WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam, void* e
 
 	case WM_FILTER_COMMAND:
 		if (COMMAND_FILE_BUTTON1 <= wparam && wparam <= COMMAND_FILE_BUTTON4) {
-			click_file_button(fp->hwnd, const_cast<char*>("�Q�ƃt�@�C��"), (int)wparam - COMMAND_FILE_BUTTON1);
+			click_dialog_button(fp->hwnd, const_cast<char*>("参照ファイル"), (int)wparam - COMMAND_FILE_BUTTON1);
 		}
 		break;
 	}
